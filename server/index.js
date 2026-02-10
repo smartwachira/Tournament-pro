@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import { query } from './src/config/db.js';
 import tournamentRoutes from './src/routes/tournamentRoutes.js'
+import { createTeam ,getAllTeams} from './src/controllers/teamController.js';
+import {addPlayer} from './src/controllers/playerController.js'
 
 const app = express();
 
@@ -9,6 +11,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api/tournaments', tournamentRoutes)
+
+
+
 //ROUTES
 //Health Check Route
 app.get('/api/health', (req,res)=>{
@@ -35,6 +40,10 @@ app.get('/api/test-db',async(req, res)=>{
 
     }
 });
+//ROUTES
+app.post('/api/teams',createTeam );
+app.get('/api/teams', getAllTeams);
+app.post('/api/players', addPlayer)
 
 
 

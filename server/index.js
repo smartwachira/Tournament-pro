@@ -1,13 +1,15 @@
 import express from 'express';
 import cors from 'cors';
 import { query } from './src/config/db.js';
+import tournamentRoutes from './src/routes/tournamentRoutes.js'
 
 const app = express();
 
 //Middleware
 app.use(cors());
 app.use(express.json());
-
+app.use('/api/tournaments', tournamentRoutes)
+//ROUTES
 //Health Check Route
 app.get('/api/health', (req,res)=>{
     res.status(200).json({
@@ -32,7 +34,7 @@ app.get('/api/test-db',async(req, res)=>{
         });
 
     }
-})
+});
 
 
 

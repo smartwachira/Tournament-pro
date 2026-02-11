@@ -1,37 +1,54 @@
-import React, { useEffect, useState} from "react";
-import { tournamentService } from "./services/api";
-import { Trophy, Calendar } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { tournamentService } from './services/api';
+import { Trophy, Calendar, Plus, Users } from 'lucide-react';
 
-function App(){
+function App() {
   const [tournaments, setTournaments] = useState([]);
 
-  useEffect(()=>{
-     tournamentService.getAll()
-     .then(data=>setTournaments(data))
-     .catch(err=> console.error("Error fetching tournaments:",err));
-  },[]);
+  useEffect(() => {
+    tournamentService.getAll()
+      .then(setTournaments)
+      .catch(err => console.error(err));
+  }, []);
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'sans-serif'}}>
-      <h1>⚽ Tournament Pro Dashboard</h1>
-      <hr />
+    <div className="min-h-screen bg-slate-50 p-8">
+      <header className="flex justify-between items-center mb-10">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Tournament Pro</h1>
+          <p className="text-slate-500">Manage your leagues and stats</p>
+        </div>
+        <button className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+          <Plus size={20} /> New Tournament
+        </button>
+      </header>
 
-      <div style={{ display: 'grid',gap: '1rem', marginTop: '2rem'}}>
-        {tournaments.length === 0? (
-          <p>No tournaments found. Create your first one in the backend!</p>
-        ) : (
-          tournaments.map(t => (
-            <div key={t.id} style={{ border: '1px solid #ddd', padding: '1rem', borderRadius:'8px'}}>
-              <div style={{display: "flex", alignItems: 'center', gap: '0.5rem'}}>
-                <Trophy size={20} color="#facc15"></Trophy>
-                <h3 style={{margin: 0}}>{t.name}</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {tournaments.map((t) => (
+          <div key={t.id} className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition cursor-pointer">
+            <div className="flex justify-between items-start mb-4">
+              <div className="p-3 bg-amber-100 rounded-lg">
+                <Trophy className="text-amber-600" size={24} />
               </div>
-              <p style={{ color: '#666'}}>
-                <Calendar size={14}></Calendar> {new Date(t.start_date).toLocaleDateString()}
-              </p>
+              <span className="text-xs font-semibold uppercase tracking-wider px-2 py-1 bg-green-100 text-green-700 rounded-full">
+                {t.status || 'Active'}
+              </span>
             </div>
-          ))
-        )}
+            
+            <h3 className="text-xl font-bold text-slate-800 mb-2">{t.name}</h3>
+            
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-slate-500 text-sm">
+                <Calendar size={16} />
+                <span>Starts: {new Date(t.start_date).toLocaleDateString()}</span>
+              </div>
+              <div className="flex items-center gap-2 text-slate-500 text-sm">
+                <Users size={16} />
+                <span>12 Teams Registered</span>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

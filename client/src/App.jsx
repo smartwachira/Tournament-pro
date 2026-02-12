@@ -1,24 +1,32 @@
 import React, { useEffect, useState } from 'react';
+import AddTournamentModal from './components/AddTournamentModal';
 import { tournamentService } from './services/api';
 import { Trophy, Calendar, Plus, Users } from 'lucide-react';
 
 function App() {
   const [tournaments, setTournaments] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
+  const fetchTournaments = () => {
     tournamentService.getAll()
       .then(setTournaments)
       .catch(err => console.error(err));
-  }, []);
+  };
+  useEffect(()=>{fetchTournaments();});
 
   return (
     <div className="min-h-screen bg-slate-50 p-8">
+      <AddTournamentModal
+        isOpen={isModalOpen}
+        onClose={()=> setIsModalOpen(false)}
+        onRefresh={fetchTournaments}
+      ></AddTournamentModal>
       <header className="flex justify-between items-center mb-10">
         <div>
           <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Tournament Pro</h1>
           <p className="text-slate-500">Manage your leagues and stats</p>
         </div>
-        <button className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+        <button onClick={()=>setIsModalOpen(true)} className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
           <Plus size={20} /> New Tournament
         </button>
       </header>

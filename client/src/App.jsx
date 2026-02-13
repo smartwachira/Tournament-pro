@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import AddTournamentModal from './components/AddTournamentModal';
 import { tournamentService } from './services/api';
 import { Trophy, Calendar, Plus, Users } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 function App() {
   const [tournaments, setTournaments] = useState([]);
@@ -12,7 +13,9 @@ function App() {
       .then(setTournaments)
       .catch(err => console.error(err));
   };
-  useEffect(()=>{fetchTournaments();});
+  useEffect(()=>{
+    fetchTournaments();
+  }, []);
 
   return (
     <div className="min-h-screen bg-slate-50 p-8">
@@ -33,9 +36,14 @@ function App() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {tournaments.map((t) => (
-          <div key={t.id} className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition cursor-pointer">
-            <div className="flex justify-between items-start mb-4">
-              <div className="p-3 bg-amber-100 rounded-lg">
+          <Link 
+            key={t.id} 
+            to={`/tournament/${t.id}`}
+            className="block p-6 bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md hover:border-indigo-400 transition-all cursor-pointer group"
+          >
+          {/* <div key={t.id} className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition cursor-pointer"> */}
+            <div className="flex justify-between items-center mb-4">
+              <div className="p-3 bg-amber-100 rounded-lg ">
                 <Trophy className="text-amber-600" size={24} />
               </div>
               <span className="text-xs font-semibold uppercase tracking-wider px-2 py-1 bg-green-100 text-green-700 rounded-full">
@@ -43,7 +51,9 @@ function App() {
               </span>
             </div>
             
-            <h3 className="text-xl font-bold text-slate-800 mb-2">{t.name}</h3>
+            <h3 className="text-xl font-bold text-slate-800 mb-2">
+              {t.name}
+            </h3>
             
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-slate-500 text-sm">
@@ -55,7 +65,8 @@ function App() {
                 <span>12 Teams Registered</span>
               </div>
             </div>
-          </div>
+          {/* </div> */}
+        </Link>
         ))}
       </div>
     </div>

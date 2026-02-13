@@ -1,6 +1,10 @@
+
+
 const API_URL = 'http://localhost:5000/api';
 
+
 export const tournamentService = {
+  
   // Fetch all tournaments
   getAll: async () => {
     const response = await fetch(`${API_URL}/tournaments`);
@@ -16,5 +20,14 @@ export const tournamentService = {
       body: JSON.stringify(data),
     });
     return response.json();
+  },
+
+  //Fetch one Tournament
+  getOne: async (id)=>{
+    
+    const response = await fetch(`${API_URL}/tournaments/${id}`);
+    if (!response.ok) throw new Error('Network response was not ok');
+    return response.json();
   }
+
 };

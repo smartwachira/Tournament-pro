@@ -1,0 +1,96 @@
+import React, { useEffect, useState} from "react";
+import { useParams, Link } from "react-router-dom";
+import {  ChevronLeft,Users, Trophy, BarChart3, Calendar, Settings}  from 'lucide-react';
+import { tournamentService } from "../services/api";
+
+export default function TournamentDetails(){
+    const { id } = useParams();
+    const [tournament, setTournament] = useState([]);
+    const [loading, setLoading ]= useState(true);
+
+    // useEffect(()=>{
+       
+    //     tournamentService.getOne(id)
+    //         .then(data =>{
+    //             setTournament(data);
+    //             setLoading(false);
+                
+    //         })
+    //         .catch(()=> setLoading(false));
+
+    // }, [id]);
+   
+    const fetchTournament = (id) => {
+        tournamentService.getOne(id)
+            .then((data)=>{
+                setTournament(data);
+                setLoading(false)
+            })
+            .catch(err => console.error(err))
+            .catch(()=> setLoading(false));
+        };
+     
+      useEffect(()=>{
+        fetchTournament(id);
+      }, []);
+    
+
+    if (loading) return <div className="p-10 text-center font-bold animate-pulse">Scanning the pitch...</div>
+    if (!tournament) return <div className="p-10 text-center text-red-500">Tournament not found.</div>
+    
+    return (
+        
+        <div className="min-h-screen bg-slate-50 p-8">
+            <Link to="/" className="flex items-center gap-2 text-indigo-600 font-semibold mb-6 hover:underline">
+                <ChevronLeft size={20}></ChevronLeft> Back to Dashboard
+            </Link>
+
+            {/* Header Card */}
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200 mb-8 relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-8 opacity-5">
+                <Trophy size={120} />
+                </div>
+        
+                <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-2">
+                        <span className="bg-indigo-100 text-indigo-700 text-[10px] font-black uppercase tracking-[0.2em] px-2 py-1 rounded">League Official</span>
+                        <span className="text-slate-400 text-xs">ID: #{tournament.id}</span>
+                    </div>
+                    <h1 className="text-4xl font-black text-slate-900 mb-4">{tournament.name}</h1>
+                    <div className="flex flex-wrap gap-6 text-slate-500 text-sm">
+                        <div className="flex items-center gap-2">
+                            <Calendar size={18} className="text-indigo-500" />
+                            <span className="font-medium">Starts: {new Date(tournament.start_date).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-green-600">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-ping"></div>
+                            <span className="font-bold uppercase tracking-widest text-xs">{tournament.status}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Management Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <ManagementCard icon={<Users />} title="Teams" desc="Register & Manage Squads" color="bg-blue-50 text-blue-600" />
+                <ManagementCard icon={<Trophy />} title="Standings" desc="Points & Fair Play" color="bg-amber-50 text-amber-600" />
+                <ManagementCard icon={<Calendar />} title="Matches" desc="Schedule & Results" color="bg-emerald-50 text-emerald-600" />
+                <ManagementCard icon={<Settings />} title="Settings" desc="Rules & AI Analysis" color="bg-slate-50 text-slate-600" />
+            </div> 
+        </div>
+    );
+};
+
+function ManagementCard({ icon, title, desc,color}){
+    return(
+        <button className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:border-indigo-300 hover:shadow-md transition-all text-left group">
+            <div className={`p-3 rounded-lg w-fit mb-4 ${color} group-hover:scale-110 transition-transform `}>
+                {icon}
+            </div>
+            <h4 className="font-bold text-slate-900 mb-1">{title}</h4>
+            <p className="text-xs text-slate-500">
+                {desc}
+            </p>
+        </button>
+    )
+}

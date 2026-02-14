@@ -23,11 +23,39 @@ export const tournamentService = {
   },
 
   //Fetch one Tournament
-  getOne: async (id)=>{
+  getOne: async (tournamentId)=>{
     
-    const response = await fetch(`${API_URL}/tournaments/${id}`);
+    const response = await fetch(`${API_URL}/tournaments/${tournamentId}`);
     if (!response.ok) throw new Error('Network response was not ok');
     return response.json();
-  }
+  },
+
+  //Fetch Tournament Teams
+  getTournamentTeams: async (tournamentId)=>{
+    const response = await fetch(`${API_URL}/tournaments/${tournamentId}/teams`);
+    if (!response.ok) throw new Error('Network response was not ok');
+    return response.json();
+  },
+
+  // Create a new team
+  createTeam: async (teamName) => {
+    const response = await fetch(`${API_URL}/teams`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({name: teamName}),
+    });
+    return response.json();
+  },
+
+  //Link to Tournament
+   linkToTournament : async (tournamentId, team) => {
+    const response = await fetch(`${API_URL}/teams/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({tournamentId, teamId: team.id}),
+    });
+    return response.json();
+  },
+
 
 };

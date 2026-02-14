@@ -33,28 +33,36 @@ export const getTournaments = async (req,res) =>{
 
 //Get Single Tournament
 export const getTournament = async (req,res)=>{
-    const { id } = req.params;
-    
     try {
-        const result = await query('SELECT * FROM tournaments WHERE id = $1', [id]);
-        if (result.rows.length === 0) return res.status(404).json({ error: "Tournament not found"});
-        res.json(result.rows[0]);
-        
-    } catch (err){
-        res.status(500).json({ error: 'Database error'});
+        const { id } = req.params;
+        const result = await pool.query(
+        `SELECT teams.* FROM teams 
+        JOIN tournament_teams ON teams.id = tournament_teams.team_id 
+        WHERE tournament_teams.tournament_id = $1`, 
+        [id]
+        );
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error"); // This is where your 500 is coming from!
     }
 }
 
 //Get all teams for a specific tournament
 export const getTournamentTeams = async (req,res)=>{
-    const { id } = req.params;
 
-    try{
-        const result= await query(
-            'SELECT t.* FROM  t JOIN tournament_teams tt ON t.id=tt.team_id WHERE tt.tournament_id = $1', [id]
-        );
-        res.json(result.rows);
-    } catch (err){
-        res.status(500).json({ error: 'Failed to fetch tournament teams'});
-    }
+    try {
+    const { id } = req.params;
+    const result = await pool.query(
+      `SELECT teams.* FROM teams 
+       JOIN tournament_teams ON teams.id = tournament_teams.team_id 
+       WHERE tournament_teams.tournament_id = $1`, 
+      [id]
+    );
+    
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json( {error: "Failed to fetch tournament teams"}); // This is where your 500 is coming from!
+  }
 }

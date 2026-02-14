@@ -2,23 +2,13 @@ import React, { useEffect, useState} from "react";
 import { useParams, Link } from "react-router-dom";
 import {  ChevronLeft,Users, Trophy, BarChart3, Calendar, Settings}  from 'lucide-react';
 import { tournamentService } from "../services/api";
+import  TeamList  from "../components/TeamList";
+
 
 export default function TournamentDetails(){
     const { id } = useParams();
     const [tournament, setTournament] = useState([]);
     const [loading, setLoading ]= useState(true);
-
-    // useEffect(()=>{
-       
-    //     tournamentService.getOne(id)
-    //         .then(data =>{
-    //             setTournament(data);
-    //             setLoading(false);
-                
-    //         })
-    //         .catch(()=> setLoading(false));
-
-    // }, [id]);
    
     const fetchTournament = (id) => {
         tournamentService.getOne(id)
@@ -28,7 +18,7 @@ export default function TournamentDetails(){
             })
             .catch(err => console.error(err))
             .catch(()=> setLoading(false));
-        };
+    };
      
       useEffect(()=>{
         fetchTournament(id);
@@ -77,9 +67,18 @@ export default function TournamentDetails(){
                 <ManagementCard icon={<Calendar />} title="Matches" desc="Schedule & Results" color="bg-emerald-50 text-emerald-600" />
                 <ManagementCard icon={<Settings />} title="Settings" desc="Rules & AI Analysis" color="bg-slate-50 text-slate-600" />
             </div> 
+
+            <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2">
+                    <TeamList tournamentId={id}></TeamList>
+                </div>
+                <div className="bg-slate-200 rounded-xl h-64 flex items-center justify-center text-slate-400 italic">
+                    Match Schedule coming soon...
+                </div>
+            </div>
         </div>
     );
-};
+}
 
 function ManagementCard({ icon, title, desc,color}){
     return(

@@ -10,6 +10,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<App/>}></Route>
+        <Route path='/test-db' element={<div>Database Connected!!</div>}></Route>
         <Route path='/tournament/:id' element={<TournamentDetails/>}></Route>
       </Routes>
     </BrowserRouter>

@@ -1,7 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { query } from './config/db.js';
+import { query } from './src/config/db.js';
+// 1. Correct Named Import (must use curly braces)
+import { tournamentRoutes } from './src/routes/tournamentRoutes.js';
+// 2. Import Team and Player logic
+import { createTeam, getAllTeams } from './src/controllers/teamController.js';
+import { addPlayer } from './src/controllers/playerController.js';
 
 dotenv.config();
 
@@ -10,6 +15,15 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// ROUTES
+// 3. Mount Tournament routes (handles /api/tournaments and /api/tournaments/:id)
+app.use('/api/tournaments', tournamentRoutes);
+
+// 4. Mount Team and Player routes
+app.post('/api/teams', createTeam);
+app.get('/api/teams', getAllTeams);
+app.post('/api/players', addPlayer);
 
 // Sandbox Route: Test DB Connection
 app.get('/api/test-db', async (req, res) => {
@@ -21,7 +35,7 @@ app.get('/api/test-db', async (req, res) => {
       message: 'Database is communicating perfectly!'
     });
   } catch (err) {
-    console.error(err);
+    console.error("DB Connection Error:", err.message);
     res.status(500).json({ status: 'Error', message: 'Database connection failed.' });
   }
 });

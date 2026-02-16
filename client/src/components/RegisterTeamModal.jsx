@@ -5,6 +5,7 @@ import { tournamentService } from '../services/api';
 
 export default function RegisterTeamModal({ isOpen,onClose,tournamentId,onRefresh}){
     const [teamName,setTeamName] = useState('');
+    const [teamLogo,setTeamLogo] = useState('');
     
 
     if (!isOpen) return null;
@@ -12,8 +13,9 @@ export default function RegisterTeamModal({ isOpen,onClose,tournamentId,onRefres
     const handleRegister = async (e)=>{
         e.preventDefault();
         try{
-            const team = tournamentService.createTeam(teamName)
-            tournamentService.linkToTournament(tournamentId, team);
+            const team = tournamentService.createTeam(teamName,teamLogo)
+            console.log(team)
+            tournamentService.linkToTournament(tournamentId, team.teamId);
             onRefresh;
             onClose();
             setTeamName('');
@@ -46,6 +48,13 @@ export default function RegisterTeamModal({ isOpen,onClose,tournamentId,onRefres
                                 placeholder="Search or create team..."
                                 value={teamName} 
                                 onChange={(e) => setTeamName(e.target.value)}
+                            />
+                            <input 
+                                type="text" 
+                                className="w-full pl-10 pr-4 py-2 5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                                placeholder="Create team Initials(MNC)..."
+                                value={teamLogo} 
+                                onChange={(e) => setTeamLogo(e.target.value)}
                             />
                                
                         </div>

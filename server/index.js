@@ -1,16 +1,26 @@
 import express from 'express';
 import cors from 'cors';
+import dotenv from 'dotenv';
 import { query } from './src/config/db.js';
-import  tournamentRoutes  from './src/routes/tournamentRoutes.js';
-import { createTeam ,getAllTeams} from './src/controllers/teamController.js';
-import {addPlayer} from './src/controllers/playerController.js'
+import  {tournamentRoutes}  from './src/routes/tournamentRoutes.js';
+import {teamRoutes} from './src/routes/teamRoutes.js';
+import {PlayerRoutes} from './src/controllers/playerController.js'
 
+dotenv.config();
 const app = express();
 
 //Middleware
 app.use(cors());
 app.use(express.json());
+
+//Tournament Routes
 app.use('/api/tournaments', tournamentRoutes);
+
+//Team  Routes
+app.use('api/teams',teamRoutes)
+
+//Player Routes
+app.use('/api/players',PlayerRoutes)
 
 
 
@@ -42,9 +52,7 @@ app.get('/api/test-db',async(req, res)=>{
     }
 });
 //ROUTES
-app.post('/api/teams',createTeam );
-app.get('/api/teams', getAllTeams);
-app.post('/api/players', addPlayer)
+
 
 
 

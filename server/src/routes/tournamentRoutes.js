@@ -1,6 +1,7 @@
 import express from 'express';
 import { createTournament, getTournaments,getTournament,getTournamentTeams } from '../controllers/tournamentController.js';
 
+
 const router = express.Router();
 
 router.post('/', createTournament);

@@ -22,7 +22,7 @@ export default function TeamList({ tournamentId, onRegisterClick,refreshTrigger 
         <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
             <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                 <h3 className="font-bold text-slate-800 flex items-center gap-2">
-                    <Shield size={18} className="text-indigo-500">Registered Teams</Shield>
+                    <Shield size={18} className="text-indigo-500"></Shield>Registered Teams
                 </h3>
                 <button onClick={onRegisterClick} className="text-xs font-bold bg-indigo-600 text-white px-3 py-1.5 rounded-lg hover:bg-indigo-700 transition">Register Team </button>
             </div>
@@ -34,7 +34,7 @@ export default function TeamList({ tournamentId, onRegisterClick,refreshTrigger 
                     </div>
                 ) : (
                     teams.map(team =>(
-                        <div className="p-4 flex items-center justify-between hover:bg-slate-50 transition">
+                        <div key={team.id} className="p-4 flex items-center justify-between hover:bg-slate-50 transition">
                             <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center font-bold text-slate-400">
                                     {team.name.charAt(0)}

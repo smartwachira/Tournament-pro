@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { query } from './src/config/db.js';
-import tournamentRoutes from './src/routes/tournamentRoutes.js'
+import  tournamentRoutes  from './src/routes/tournamentRoutes.js';
 import { createTeam ,getAllTeams} from './src/controllers/teamController.js';
 import {addPlayer} from './src/controllers/playerController.js'
 
@@ -11,7 +11,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api/tournaments', tournamentRoutes);
-app.use('api/teams')
+
 
 
 

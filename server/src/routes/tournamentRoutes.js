@@ -8,4 +8,4 @@ router.get('/',getTournaments);
 router.get('/:id',getTournament);
 router.get('/:id/teams',getTournamentTeams)
 
-export default router;
+export default router ;

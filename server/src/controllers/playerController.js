@@ -1,9 +1,9 @@
-import { query } from '../config/db.js';
+import  pool  from '../config/db.js';
 
 export const addPlayer = async (req,res)=>{
     const {team_id, name, position,jersey_number} = req.body;
     try {
-        const result = await query(
+        const result = await pool.query(
             'INSERT INTO players (team_id, name, position, jersey_number) VALUES ($1, $2, $3, $4) RETURNING *',
             [team_id, name, position, jersey_number]
         );

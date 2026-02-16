@@ -3,31 +3,42 @@ import { useParams, Link } from "react-router-dom";
 import {  ChevronLeft,Users, Trophy, BarChart3, Calendar, Settings}  from 'lucide-react';
 import { tournamentService } from "../services/api";
 import  TeamList  from "../components/TeamList";
+import RegisterTeamModal from "../components/RegisterTeamModal";
 
 
 export default function TournamentDetails(){
     const { id } = useParams();
     const [tournament, setTournament] = useState([]);
     const [loading, setLoading ]= useState(true);
+    const [isRegModalOpen, setIsRegModalOpen] = useState(false);
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+    
    
-    const fetchTournament = (id) => {
-        tournamentService.getOne(id)
-            .then((data)=>{
-                setTournament(data);
-                setLoading(false)
-            })
-            .catch(err => console.error(err))
-            .catch(()=> setLoading(false));
-    };
-     
-      useEffect(()=>{
-        fetchTournament(id);
-      }, []);
+    useEffect(() => {
+    // Wrap your logic in a try/catch block
+        const fetchTournament = async () => {
+            try {
+                const data = await tournamentService.getOne(id);
+                setTournament(data[0]);
+                
+            } catch (err) {
+                console.error("Failed to fetch tournament:", err);
+                // Stop the loading spinner even if it fails
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTournament()
+    }, [id]);
+
     
 
     if (loading) return <div className="p-10 text-center font-bold animate-pulse">Scanning the pitch...</div>
     if (!tournament) return <div className="p-10 text-center text-red-500">Tournament not found.</div>
     
+    !isRegModalOpen;
     return (
         
         <div className="min-h-screen bg-slate-50 p-8">
@@ -70,8 +81,19 @@ export default function TournamentDetails(){
 
             <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2">
-                    <TeamList tournamentId={id}></TeamList>
+                    <TeamList 
+                        tournamentId={id} 
+                        onRegisterClick={()=>setIsRegModalOpen(true)}
+                        refreshTrigger={refreshTrigger}
+                    ></TeamList>
+                    
                 </div>
+                <RegisterTeamModal 
+                    isOpen={isRegModalOpen} 
+                    onClose={()=>setIsRegModalOpen(false)}
+                    tournamentId={id}
+                    onRefresh={() => setRefreshTrigger(prev => prev + 1)}
+                ></RegisterTeamModal>
                 <div className="bg-slate-200 rounded-xl h-64 flex items-center justify-center text-slate-400 italic">
                     Match Schedule coming soon...
                 </div>

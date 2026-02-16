@@ -14,9 +14,9 @@ export default function RegisterTeamModal({ isOpen,onClose,tournamentId,onRefres
         try{
             const team = tournamentService.createTeam(teamName)
             tournamentService.linkToTournament(tournamentId, team);
-            onRefresh();
+            onRefresh;
             onClose();
-            setTeamName('')
+            setTeamName('');
             
         } catch (err){
             console.error('Registration failed', err);
@@ -32,7 +32,7 @@ export default function RegisterTeamModal({ isOpen,onClose,tournamentId,onRefres
                         <ShieldPlus className="text-indigo-600"></ShieldPlus>
                         Add Team  to League
                     </h2>
-                    <button onClick className="text-slate-400 hover:text-slate-600"><X/></button>
+                    <button onClick={()=>onClose()} className="text-slate-400 hover:text-slate-600"><X/></button>
                 </div>
 
                 <form onSubmit={handleRegister} className="p-6 space-y-4">

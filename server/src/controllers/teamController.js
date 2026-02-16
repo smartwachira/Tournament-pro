@@ -1,4 +1,4 @@
-import { query } from '../config/db.js';
+import  pool  from '../config/db.js';
 
 
 
@@ -7,7 +7,7 @@ export const createTeam = async (req, res ) =>{
     const { name, logo_url } = req.body;
 
     try {
-        const result = await query(
+        const result = await pool.query(
             'INSERT INTO teams (name, logo_url) VALUES ($1, $2) RETURNING *',
             [name, logo_url]
         );
@@ -19,7 +19,7 @@ export const createTeam = async (req, res ) =>{
 
 export const getAllTeams = async (req, res) => {
     try {
-        const result =await query('SELECT * FROM teams');
+        const result =await pool.query('SELECT * FROM teams');
         res.json(result.rows);
     } catch (err) {
         res.status(500).json({error: 'Failed to fetch teams'})
@@ -29,7 +29,7 @@ export const getAllTeams = async (req, res) => {
 export const registerTeamToTournament = async (req,res)=> {
     const {tournamentId, teamId} = req.body;
     try{
-        const result = await query(
+        const result = await pool.query(
             'INSERT INTO tournament_teams (tournament_id, team_id) VALUES ($1,$2) ON CONFLICT DO NOTHING',
             [tournamentId, teamId]
         );
@@ -38,3 +38,4 @@ export const registerTeamToTournament = async (req,res)=> {
         res.status(500).json({ error: 'Registration failed'})
     }
 }
+

@@ -39,12 +39,16 @@ export const tournamentService = {
 
   // Create a new team
   createTeam: async (teamName) => {
-    const response = await fetch(`${API_URL}/teams`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({name: teamName}),
-    });
-    return response.json();
+    try{
+      const response = await fetch(`${API_URL}/teams`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({name: teamName}),
+      });
+      return response.json();
+    }catch (err){
+      console.error("Error creating a team",err)
+    }
   },
 
   //Link to Tournament

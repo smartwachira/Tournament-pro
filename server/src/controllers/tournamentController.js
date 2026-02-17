@@ -13,7 +13,7 @@ export const createTournament = async (req,res) =>{
             'INSERT INTO tournaments (name, start_date, end_date) VALUES ($1, $2, $3) RETURNING *',
             [name, start_date, end_date]
         );
-        res.status(500).json(result.rows[0]);
+        res.status(201).json(result.rows[0]);
     } catch (err){
         console.error(err);
         res.status(500).json ({ error: 'Failed to create tournament'});

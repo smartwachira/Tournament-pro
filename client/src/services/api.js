@@ -4,7 +4,7 @@ export const tournamentService = {
   
   // Fetch all tournaments
   getAll: async () => {
-    const response = await fetch(`${API_URL}/tournaments/`);
+    const response = await fetch(`${API_URL}/tournaments`);
     if (!response.ok) throw new Error('Failed to fetch tournaments');
     return response.json();
   },
@@ -30,7 +30,7 @@ export const tournamentService = {
   // Fetch Tournament Teams
   getTournamentTeams: async (tournamentId) => {
     try {
-      const response = await fetch(`${API_URL}/tournaments/${tournamentId}/teams/`);
+      const response = await fetch(`${API_URL}/tournaments/${tournamentId}/teams`);
       if (!response.ok) {
         throw new Error('Failed to fetch tournament teams');
       }
@@ -41,48 +41,20 @@ export const tournamentService = {
     }
   },
 
-  // Create a new team
-  createTeam: async (teamName) => {
-    try {
-      const response = await fetch(`${API_URL}/teams/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: teamName}),
-      });
-      
-      
+  
+  
+  createAndLinkTeam: async (name, logo_url, tournamentId) =>{
+    const response = await fetch(`${API_URL}/teams/create-and-link`,{
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json'},
+      body: JSON.stringify({ name, logo_url, tournamentId})
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create team');
-      }
+    });
 
-      return await response.json();
-    } catch (err) {
-      console.error("Error creating a team:", err);
-      throw err; 
+    if(!response.ok){
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Transactional registration failed")
     }
-    
-  },
-
-  // Link Team to Tournament
-  linkToTournament: async (tournamentId, teamId) => {
-    try {
-      const response = await fetch(`${API_URL}/teams/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tournamentId, teamId }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Registration failed');
-      }
-
-      return await response.json();
-    } catch (err) {
-      console.error("Team registration error:", err);
-      throw err; // Corrected log message and re-throw
-    }
-  },
+    return response.json();
+  }
 };

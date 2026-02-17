@@ -6,21 +6,21 @@ import { tournamentService } from '../services/api';
 export default function RegisterTeamModal({ isOpen,onClose,tournamentId,onRefresh}){
     const [teamName,setTeamName] = useState('');
     const [teamLogo,setTeamLogo] = useState('');
-    
 
     if (!isOpen) return null;
 
     const handleRegister = async (e)=>{
         e.preventDefault();
         try{
-            const team = tournamentService.createTeam(teamName,teamLogo)
-            console.log(team)
-            tournamentService.linkToTournament(tournamentId, team.teamId);
-            onRefresh;
+            await tournamentService.createAndLinkTeam(teamName,teamLogo, tournamentId);
+            
+            onRefresh();
             onClose();
             setTeamName('');
+            setTeamLogo('');
             
         } catch (err){
+            alert(err.message);
             console.error('Registration failed', err);
         }
 
@@ -49,14 +49,7 @@ export default function RegisterTeamModal({ isOpen,onClose,tournamentId,onRefres
                                 value={teamName} 
                                 onChange={(e) => setTeamName(e.target.value)}
                             />
-                            <input 
-                                type="text" 
-                                className="w-full pl-10 pr-4 py-2 5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-                                placeholder="Create team Initials(MNC)..."
-                                value={teamLogo} 
-                                onChange={(e) => setTeamLogo(e.target.value)}
-                            />
-                               
+                            
                         </div>
                     </div>
                     <button className="w-full bg-slate-900 text-white font-bold py-3 rounded-xl hover:bg-indigo-600 transition-all shadow-lg shadow-indigo-200">

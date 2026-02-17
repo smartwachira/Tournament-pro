@@ -2,9 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { query } from './src/config/db.js';
-import  {tournamentRoutes}  from './src/routes/tournamentRoutes.js';
-import {teamRoutes} from './src/routes/teamRoutes.js';
-import {PlayerRoutes} from './src/controllers/playerController.js'
+import  tournamentRoutes  from './src/routes/tournamentRoutes.js';
+import teamRoutes from './src/routes/teamRoutes.js';
+import PlayerRoutes from './src/routes/playerRoutes.js'
 
 dotenv.config();
 const app = express();
@@ -17,7 +17,7 @@ app.use(express.json());
 app.use('/api/tournaments', tournamentRoutes);
 
 //Team  Routes
-app.use('api/teams',teamRoutes)
+app.use('/api/teams',teamRoutes)
 
 //Player Routes
 app.use('/api/players',PlayerRoutes)

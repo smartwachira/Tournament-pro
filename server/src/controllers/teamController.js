@@ -1,24 +1,7 @@
 // Standardizing on the 'query' helper for consistency and scope safety
 import { query } from '../config/db.js';
+import pool from '../config/db.js';
 
-export const createTeam = async (req, res) => {
-    // Corrected typo: "from"
-    // Collect data from the request
-    const { name, logo_url } = req.body;
-
-    try {
-        const result = await query(
-            'INSERT INTO teams (name, logo_url) VALUES ($1, $2) RETURNING *',
-            [name, logo_url]
-        );
-        // 201 Status for successful creation
-        res.status(201).json(result.rows[0]);
-    } catch (err) {
-        // Log the actual error to the server console for debugging
-        console.error("Database Error in createTeam:", err.message);
-        res.status(500).json({ error: 'Team name must be unique or server error.' });
-    }
-};
 
 export const getAllTeams = async (req, res) => {
     try {
@@ -30,18 +13,39 @@ export const getAllTeams = async (req, res) => {
     }
 };
 
-export const registerTeamToTournament = async (req, res) => {
-    const { tournamentId, teamId } = req.body;
+
+export const createAndRegisterTeam = async (req,res)=>{
+    const { name, logo_url, tournamentId } = req.body;
+    const client = await pool.connect();
+
     try {
-        // Uses the many-to-many junction table to link entities
-        const result = await query(
-            'INSERT INTO tournament_teams (tournament_id, team_id) VALUES ($1, $2) ON CONFLICT DO NOTHING',
-            [tournamentId, teamId]
+        //Start the ACID Transaction
+        await client.query('BEGIN');
+
+
+        //Create the Team
+        const teamResult = await client.query(
+            'INSERT INTO teams (name, logo_url) VALUES ($1, $2) RETURNING id',[name, logo_url]
         );
-        res.status(201).json({ message: 'Team registered successfully' });
-    } catch (err) {
-        // Logging the error is critical to see if foreign key constraints are failing
-        console.error("Database Error in registerTeamToTournament:", err.message);
-        res.status(500).json({ error: 'Registration failed' });
+        const teamId = teamResult.rows[0].id;
+
+        //Link the Team to the Tournament
+        await client.query(
+            'INSERT INTO tournament_teams (tournament_id, team_id) VALUES ($1, $2)',[tournamentId,teamId]
+        );
+
+        await client.query('COMMIT');
+        res.status(201).json({ success: true, teamId,message:"Team created and registered!"})
+
+
+
+    } catch (err){
+        await client.query('ROLLBACK');
+        console.error("Transaction Error:",err.message);
+        res.status(500).json({ error: "Team registration failed. Changes rolled back."})
+    } finally{
+        client.release()
     }
-};
+
+}
+

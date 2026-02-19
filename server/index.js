@@ -4,7 +4,8 @@ import dotenv from 'dotenv';
 import { query } from './src/config/db.js';
 import  tournamentRoutes  from './src/routes/tournamentRoutes.js';
 import teamRoutes from './src/routes/teamRoutes.js';
-import PlayerRoutes from './src/routes/playerRoutes.js'
+import playerRoutes from './src/routes/playerRoutes.js'
+import matchRoutes from './src/routes/matchRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -20,7 +21,9 @@ app.use('/api/tournaments', tournamentRoutes);
 app.use('/api/teams',teamRoutes)
 
 //Player Routes
-app.use('/api/players',PlayerRoutes)
+app.use('/api/players',playerRoutes)
+//Match Routes
+app.use('/api/matches',matchRoutes)
 
 
 

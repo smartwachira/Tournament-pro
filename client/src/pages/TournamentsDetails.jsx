@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import {  ChevronLeft,Users, Trophy, BarChart3, Calendar, Settings}  from 'lucide-react';
 import { tournamentService } from "../services/api";
 import  TeamList  from "../components/TeamList";
+import  MatchList  from "../components/MatchList";
 import RegisterTeamModal from "../components/RegisterTeamModal";
 
 
@@ -86,6 +87,10 @@ export default function TournamentDetails(){
                         onRegisterClick={()=>setIsRegModalOpen(true)}
                         refreshTrigger={refreshTrigger}
                     ></TeamList>
+                    <MatchList 
+                        tournamentId={id} 
+                        
+                    ></MatchList>
                     
                 </div>
                 <RegisterTeamModal 

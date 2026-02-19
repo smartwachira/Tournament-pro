@@ -1,3 +1,4 @@
+
 const API_URL = 'http://localhost:5000/api';
 
 export const tournamentService = {
@@ -42,7 +43,7 @@ export const tournamentService = {
   },
 
   
-  
+  //Create Tournament teams
   createAndLinkTeam: async (name, logo_url, tournamentId) =>{
     const response = await fetch(`${API_URL}/teams/create-and-link`,{
       method: 'POST',
@@ -56,5 +57,34 @@ export const tournamentService = {
       throw new Error(errorData.error || "Transactional registration failed")
     }
     return response.json();
-  }
+  },
+
+  //Fetch Tournament matches
+  getTournamentMatches: async (tournamentId)=>{
+    try {
+      const response = await fetch(`${API_URL}/matches/${tournamentId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch tournament matches');
+      }
+      return await response.json();
+    } catch (err) {
+      console.error("Fetch matches error:", err);
+      throw err; // Re-throw so the UI component can handle the error
+    }
+  },
+  generateTournamentMatches: async (tournamentId) =>{
+    const response = await fetch(`${API_URL}/matches/generate`,{
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json'},
+      body: JSON.stringify({tournamentId})
+
+    });
+
+    if(!response.ok){
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Matches Generation failed")
+    }
+    return response.json();
+  },
 };
+

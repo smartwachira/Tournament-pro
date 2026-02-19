@@ -6,16 +6,10 @@ dotenv.config();
 const { Pool } = pkg;
 
 //Use the connection string directly
+
 const pool = new Pool({
-  user: 'postgres',
-  host: '127.0.0.1', // Using IP instead of 'localhost' to avoid DNS issues
-  database: 'tournament_db',
-  password: 'Iyano502@', // Note: Use the raw password here, not %40
-  port: 5432,
-});
-// const pool = new Pool({
-//     connectionString: process.env.DATABASE_URL,
-// })
+    connectionString: process.env.DATABASE_URL,
+})
 
 //Diagnostic: Log successful connection
 pool.on('connect',()=>{

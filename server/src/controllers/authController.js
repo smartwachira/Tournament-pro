@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { query } from '../config/db';
+import { query } from '../config/db.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_tournament_key_2026';
 

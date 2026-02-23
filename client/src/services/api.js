@@ -18,17 +18,19 @@ export const authService = {
     const response = await  fetch(`${API_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json'},
-      body: JSON.stringify(formData.email,formData.password),
+      body: JSON.stringify(formData),
     });
+
+    const data = await response.json();
     if (!response.ok){
-      const error = await response.json();
-      throw new Error(error.error || 'Login failed');
+      
+      throw new Error(data.error || 'Login failed');
     }
 
     
-    localStorage.setItem('token',response.token);
-    localStorage.setItem('user',JSON.stringify(response.user));
-    return await response.json();
+    localStorage.setItem('token',data.token);
+    localStorage.setItem('user',JSON.stringify(data.user));
+    return data;
   
     
   },

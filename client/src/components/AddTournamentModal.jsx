@@ -10,7 +10,7 @@ export default function AddTournamentModal({ isOpen, onClose, onRefresh }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      tournamentService.create(formData)
+      await tournamentService.create(formData)
       onRefresh(); // Refresh the list
       onClose();   // Close modal
     } catch (err) {

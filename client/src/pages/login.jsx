@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useNavigate, Link} from 'react-router-dom';
 import { LogIn,Trophy } from 'lucide-react';
-import { tournamentService } from '../services/api';
+import { authService} from '../services/api';
 
 export default function  Login(){
     const [formData, setFormData] = useState({ email: '',password: ''});
@@ -12,7 +12,7 @@ export default function  Login(){
         e.preventDefault();
         try {
             
-            await tournamentService.login;
+            await authService.login(formData);
 
             navigate('/');
         } catch (err){

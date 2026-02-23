@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import AddTournamentModal from './components/AddTournamentModal';
 import { tournamentService } from './services/api';
-import { Trophy, Calendar, Plus, Users } from 'lucide-react';
+import { KeyRound, Trophy, Calendar, Plus, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import JoinTournamentModal from './components/JoinTournamentModal'
 
 function App() {
   const [tournaments, setTournaments] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
+
+
 
   const fetchTournaments = () => {
     tournamentService.getAll()
@@ -19,6 +23,11 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 p-8">
+      <JoinTournamentModal 
+        isOpen={isJoinModalOpen}
+        onClose={()=>setIsJoinModalOpen(false)}
+        onRefresh={fetchTournaments}
+        ></JoinTournamentModal>
       <AddTournamentModal
         isOpen={isModalOpen}
         onClose={()=> setIsModalOpen(false)}
@@ -29,9 +38,21 @@ function App() {
           <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Tournament Pro</h1>
           <p className="text-slate-500">Manage your leagues and stats</p>
         </div>
-        <button onClick={()=>setIsModalOpen(true)} className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
-          <Plus size={20} /> New Tournament
-        </button>
+        <div className="flex gap-3">
+          <button 
+            className="flex items-center gap-2 bg-white border border-slate-700 px-4 py-2 rounded-lg hover:border-emerald-500 hover:text-emerald-600 transition shadow-sm"
+            onClick={()=> setIsJoinModalOpen(true)}
+          >
+            <KeyRound size={20}></KeyRound> Join League
+
+          </button>
+          <button 
+            onClick={()=>setIsModalOpen(true)} 
+            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition shadow-sm shadow-indigo-200"
+          >
+            <Plus size={20} /> New Tournament
+          </button>
+        </div>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

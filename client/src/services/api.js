@@ -11,18 +11,29 @@ const getAuthHeaders =()=>{
 
 //Auth API calls
 export const authService = {
-  login: async (email,password)=>{
+
+  //User Login
+  login: async (formData)=>{
+    
     const response = await  fetch(`${API_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json'},
-      body: JSON.stringify({ email,password}),
+      body: JSON.stringify(formData.email,formData.password),
     });
     if (!response.ok){
       const error = await response.json();
       throw new Error(error.error || 'Login failed');
     }
-    return response.json();
+
+    
+    localStorage.setItem('token',response.token);
+    localStorage.setItem('user',JSON.stringify(response.user));
+    return await response.json();
+  
+    
   },
+
+  //User Registration
   register: async (userData)=>{
     const response = await fetch(`${API_URL}/auth/register`,{
       method: 'POST',

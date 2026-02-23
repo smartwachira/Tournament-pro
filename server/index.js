@@ -7,6 +7,7 @@ import teamRoutes from './src/routes/teamRoutes.js';
 import playerRoutes from './src/routes/playerRoutes.js'
 import matchRoutes from './src/routes/matchRoutes.js';
 import authRoutes from './src/routes/authRoutes.js'
+import matchEventRoutes from './src/routes/matchEventRoutes.js'
 
 dotenv.config();
 const app = express();
@@ -27,6 +28,8 @@ app.use('/api/players',playerRoutes)
 app.use('/api/matches',matchRoutes)
 //Auth Routes
 app.use('/api/auth',authRoutes);
+//match event routes
+app.use('/api/match-events',matchEventRoutes);
 
 
 

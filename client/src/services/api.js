@@ -151,3 +151,24 @@ export const tournamentService = {
   }
 };
 
+export const matchEventService = {
+  //log a new event (Goal, Card, etc)
+  logEvent: async (eventData)=>{
+    const response = await fetch(`${API_URL}/match-events`,{
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(eventData),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Failed to log event');
+    return data;
+  },
+
+  //Get the timeline of events  for a specific match
+  getEvents: async (matchId) =>{
+    const response = await fetch(`${API_URL}/match-events/${matchId}`);
+    if (!response.ok) throw new Error('Failed to fetch match events');
+    return response.json();
+  }
+}
+
